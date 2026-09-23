@@ -1,0 +1,1 @@
+enum OtpPurpose { login, register, passwordRecovery }
