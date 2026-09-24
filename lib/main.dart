@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'controllers/auth_controller.dart';
 import 'controllers/otp_controller.dart';
 import 'routes/app_routes.dart';
+import 'screens/forgot_password_screen.dart';
+import 'screens/home_screen.dart';
+import 'screens/login_screen.dart';
+import 'screens/new_password_screen.dart';
 import 'screens/otp_screen.dart';
 import 'screens/register_screen.dart';
-import 'screens/success_screen.dart';
 
 void main() {
   Get.put(OtpController());
+  Get.put(AuthController());
   runApp(const OtpApp());
 }
 
@@ -17,13 +22,16 @@ class OtpApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'SecureLogin (simplificado)',
+      title: 'SecureLogin',
       debugShowCheckedModeBanner: false,
-      initialRoute: AppRoutes.register,
+      initialRoute: AppRoutes.login,
       getPages: [
+        GetPage(name: AppRoutes.login, page: () => const LoginScreen()),
         GetPage(name: AppRoutes.register, page: () => const RegisterScreen()),
         GetPage(name: AppRoutes.otp, page: () => const OtpScreen()),
-        GetPage(name: AppRoutes.success, page: () => const SuccessScreen()),
+        GetPage(name: AppRoutes.forgotPassword, page: () => const ForgotPasswordScreen()),
+        GetPage(name: AppRoutes.newPassword, page: () => const NewPasswordScreen()),
+        GetPage(name: AppRoutes.home, page: () => const HomeScreen()),
       ],
       theme: ThemeData(
         useMaterial3: true,

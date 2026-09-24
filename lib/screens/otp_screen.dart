@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import '../controllers/auth_controller.dart';
 import '../controllers/otp_controller.dart';
-import '../routes/app_routes.dart';
+import '../models/otp_verification.dart';
 import '../widgets/custom_button.dart';
 import '../widgets/otp_input.dart';
 import 'inbox_screen.dart';
@@ -12,14 +13,15 @@ class OtpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final otp = Get.find<OtpController>();
-    final destination = Get.arguments as String;
+    final auth = Get.find<AuthController>();
+    final purpose = Get.arguments as OtpPurpose;
     final codeController = TextEditingController();
 
     Future<void> handleVerify() async {
       await Future.delayed(const Duration(milliseconds: 400));
       final result = otp.verifyOtp(codeController.text);
       if (result == OtpValidationResult.valid) {
-        Get.offNamed(AppRoutes.success, arguments: destination);
+        auth.onOtpVerified(purpose);
       }
     }
 
@@ -41,11 +43,11 @@ class OtpScreen extends StatelessWidget {
           children: [
             const Icon(Icons.mark_email_read_outlined, size: 72, color: Colors.indigo),
             const SizedBox(height: 16),
-            Text(
-              'Enviamos un código de 6 dígitos a\n$destination',
-              textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 16),
-            ),
+            Obx(() => Text(
+                  'Enviamos un código de 6 dígitos a\n${otp.destination.value}',
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 16),
+                )),
             const SizedBox(height: 24),
             OtpInput(controller: codeController),
             Obx(() => Text(otp.errorMessage.value, style: const TextStyle(color: Colors.red))),
